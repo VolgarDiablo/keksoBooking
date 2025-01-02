@@ -1,6 +1,5 @@
 import {
   getRandomValue,
-  randomLocation,
   getRandomArrayElement,
   getRandomArraySubset,
 } from "./utils/utils.js";
@@ -44,24 +43,23 @@ function createAnnouncementObject() {
 }
 
 function createOffer() {
-  const address = `${randomLocation(
-    locationMinX,
-    locationMaxX
-  )} ${randomLocation(locationMinY, locationMaxY)}`;
+  const locationPointX = getRandomValue(locationMinX, locationMaxX, 5);
+
+  const locationPointY = getRandomValue(locationMinY, locationMaxY, 5);
 
   return {
     title: "Title",
-    address: address,
-    price: `${getRandomValue(100, 10000)} UAH`,
+    address: `${locationPointX} ${locationPointY}`,
+    price: getRandomValue(100, 10000),
     type: getRandomArrayElement(types),
-    rooms: `${getRandomValue(1, 8)} rooms`,
-    guests: `${getRandomValue(1, 120)} guests`,
+    rooms: getRandomValue(1, 8),
+    guests: getRandomValue(1, 120),
     checking: getRandomArrayElement(checking),
     checkout: getRandomArrayElement(checkout),
     features: getRandomArraySubset(features),
     description: "Description",
     photos: getRandomArraySubset(photos),
-    location: address,
+    location: { x: locationPointX, y: locationPointY },
   };
 }
 

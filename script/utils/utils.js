@@ -1,9 +1,8 @@
-export function getRandomValue(min, max) {
-  return Math.round(Math.random() * (max - min) + min);
-}
-
-export function randomLocation(min, max) {
-  return (Math.random() * (max - min) + min).toFixed(5);
+export function getRandomValue(min, max, decimals = 0) {
+  const randomValue = Math.random() * (max - min) + min;
+  return decimals > 0
+    ? parseFloat(randomValue.toFixed(decimals))
+    : Math.round(randomValue);
 }
 
 export function getRandomArrayElement(array) {
