@@ -6,10 +6,43 @@
 
     <title>Kekso Booking</title>
 
-    <link rel="stylesheet" href="./style/style.css" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/style/style.css" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   </head>
   <body>
-    <script type="module" src="./script/main.js"></script>
+    <main></main>
+    <footer></footer>
+
+    <!-- Карточка объявления -->
+    <template id="card">
+      <article class="popup">
+        <img
+          src="img/avatars/user01.png"
+          class="popup__avatar"
+          width="70"
+          height="70"
+          alt="Аватар пользователя"
+        />
+        <h3 class="popup__title"></h3>
+        <p class="popup__text popup__text--address"></p>
+        <p class="popup__text popup__text--price"></p>
+        <h4 class="popup__type"></h4>
+        <p class="popup__text popup__text--capacity"></p>
+        <p class="popup__text popup__text--time"></p>
+        <ul class="popup__features"></ul>
+        <p class="popup__description"></p>
+        <div class="popup__photos">
+          <img
+            src=""
+            class="popup__photo"
+            width="45"
+            height="40"
+            alt="Фотография жилья"
+          />
+        </div>
+      </article>
+    </template>
+
+    <script type="module" src="/script/main.js"></script>
   </body>
 </html>

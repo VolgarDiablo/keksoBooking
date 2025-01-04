@@ -1,0 +1,203 @@
+/* Общие стили. Каркас
+   ========================================================================== */
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Bold.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.content-box-component {
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+body {
+  max-width: 1200px;
+  min-width: 1000px;
+  margin: 0 auto;
+
+  color: #353535;
+  font-family: "Roboto", "Arial", sans-serif;
+  font-size: 16px;
+
+  background-color: #f0f0ea;
+}
+
+/* Карточка объявления
+ */
+
+.popup {
+  position: relative;
+  display: block;
+  width: 250px;
+
+  font-size: 12px;
+}
+
+.popup__avatar {
+  display: block;
+  margin-bottom: 10px;
+  width: 35px;
+  height: 35px;
+}
+
+.popup__close {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+
+  padding: 0;
+
+  font-size: 0;
+
+  border: 0;
+  background: none;
+}
+
+.popup__close:active {
+  -webkit-transform: translate(1px, 1px);
+  -ms-transform: translate(1px, 1px);
+  transform: translate(1px, 1px);
+}
+
+.popup__close:focus {
+  outline: none;
+  -webkit-box-shadow: 0 0 10px 3px #ff6547;
+  box-shadow: 0 0 10px 3px #ff6547;
+}
+
+.popup__close::after {
+  font-size: 50px;
+  line-height: 40px;
+
+  display: block;
+  content: "×";
+
+  color: #000000;
+}
+
+.popup__title {
+  margin: 0;
+  margin-bottom: 10px;
+
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.popup__text {
+  margin: 0 0 10px 0 !important;
+}
+
+.popup__text--price {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.popup__price span {
+  font-size: 16px;
+}
+
+.popup__type {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.popup__text--capacity {
+  margin-bottom: 0;
+}
+
+.popup__features {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.popup__features {
+  margin-bottom: 10px;
+}
+
+.popup__feature {
+  display: inline-block;
+  overflow: hidden;
+
+  width: 30px;
+  height: 28px;
+
+  font-size: 0;
+
+  background-image: url("../img/sprite-feature.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 25px 345px;
+}
+
+.popup__feature--wifi {
+  background-position: 2px 5px;
+}
+
+.popup__feature--dishwasher {
+  background-position: 2px -25px;
+}
+
+.popup__feature--parking {
+  background-position: 3px -55px;
+}
+
+.popup__feature--washer {
+  background-position: 2px -85px;
+}
+
+.popup__feature--elevator {
+  background-position: 2px -143px;
+}
+
+.popup__feature--conditioner {
+  background-position: 3px -114px;
+}
+
+.popup__photos {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.popup__photo {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.popup__photo:hover {
+  border: 2px solid #ff5635;
+}
