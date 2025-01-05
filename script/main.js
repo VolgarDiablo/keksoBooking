@@ -4,6 +4,7 @@ import {
   getRandomArraySubset,
 } from "./utils/utils.js";
 import { renderCards } from "./renderCards.js";
+import { initFormHandlers } from "./formHandlers.js";
 
 const types = ["palace", "flat", "house", "bungalow"];
 const checking = ["12:00", "13:00", "14:00"];
@@ -67,3 +68,4 @@ function createOffer() {
 const announcements = createAnnouncementObject();
 console.log(announcements);
 renderCards(announcements, "#card", "main");
+initFormHandlers(".ad-form");
