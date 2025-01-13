@@ -7,6 +7,10 @@
     <title>Kekso Booking</title>
 
     <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+    />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   </head>
   <body>
@@ -28,7 +32,12 @@
 
         <!-- Фильтрация объявлений -->
         <div class="map__filters-container">
-          <form action="#" class="map__filters" autocomplete="off">
+          <form
+            action="#"
+            class="map__filters"
+            id="map__filters"
+            autocomplete="off"
+          >
             <select name="housing-type" id="housing-type" class="map__filter">
               <option value="any" selected>Любой тип жилья</option>
               <option value="palace">Дворец</option>
@@ -139,6 +148,7 @@
         <h2 class="notice__title">Ваше объявление</h2>
         <form
           class="ad-form"
+          id="ad-form"
           method="post"
           enctype="multipart/form-data"
           autocomplete="off"
@@ -436,5 +446,6 @@
     </template>
 
     <script type="module" src="/script/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
   </body>
 </html>
