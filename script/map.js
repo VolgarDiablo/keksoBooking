@@ -15,7 +15,8 @@ const pinIcon = L.icon({
   iconAnchor: [20, 40],
 });
 
-function setPageInactive() {
+export function setPageInactive() {
+  console.log("1", new Date().getMilliseconds());
   stateElementsForm(mapFilters, true);
   stateElementsForm(adFilters, true);
 }
@@ -23,6 +24,7 @@ function setPageInactive() {
 setPageInactive();
 
 function setPageActive() {
+  console.log("2", new Date().getMilliseconds());
   stateElementsForm(mapFilters, false);
   stateElementsForm(adFilters, false);
 }
@@ -70,5 +72,6 @@ adLocations.forEach((location) => {
 map.whenReady(() => {
   console.log("Карта загрузилась");
   setPageActive();
+  console.log("3", new Date().getMilliseconds());
   inputAddress.value = `${setPointTokyo[0]}, ${setPointTokyo[1]}`;
 });
