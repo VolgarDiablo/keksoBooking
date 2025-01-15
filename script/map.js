@@ -1,3 +1,5 @@
+import { renderCard } from "./renderCards.js";
+
 const mapFilters = document.getElementById("map__filters");
 const adFilters = document.getElementById("ad-form");
 const setPointTokyo = [35.67267785620779, 139.75866624868985];
@@ -16,7 +18,6 @@ const pinIcon = L.icon({
 });
 
 export function setPageInactive() {
-  console.log("1", new Date().getMilliseconds());
   stateElementsForm(mapFilters, true);
   stateElementsForm(adFilters, true);
 }
@@ -24,7 +25,6 @@ export function setPageInactive() {
 setPageInactive();
 
 function setPageActive() {
-  console.log("2", new Date().getMilliseconds());
   stateElementsForm(mapFilters, false);
   stateElementsForm(adFilters, false);
 }
@@ -50,28 +50,41 @@ const mainMarker = L.marker(setPointTokyo, {
   draggable: true,
 }).addTo(map);
 
-// Обновление при перемещении метки
 mainMarker.on("move", (event) => {
   const { lat, lng } = event.target.getLatLng();
   inputAddress.value = `${lat}, ${lng}`;
 });
 
-const adLocations = [
-  { lat: 35.652, lng: 139.758666 },
-  { lat: 35.622, lng: 139.76 },
-  { lat: 35.624, lng: 139.457 },
-];
+// Добавление меток с карточками на карту
+export function addMarkersToMap(announcements) {
+  announcements.forEach((announcement) => {
+    const marker = L.marker(
+      [announcement.offer.location.x, announcement.offer.location.y],
+      {
+        icon: pinIcon,
+      }
+    ).addTo(map);
 
-// Добавление обычных меток на карту
-adLocations.forEach((location) => {
-  L.marker([location.lat, location.lng], {
-    icon: pinIcon,
-  }).addTo(map);
-});
+    marker.on("click", () => {
+      const popupContent = renderCard(announcement);
+      if (!popupContent) return;
+
+      const container = document.createElement("div");
+      container.appendChild(popupContent);
+
+      const popup = L.popup()
+        .setLatLng([
+          announcement.offer.location.x,
+          announcement.offer.location.y,
+        ])
+        .setContent(container)
+        .openOn(map);
+    });
+  });
+}
 
 map.whenReady(() => {
   console.log("Карта загрузилась");
   setPageActive();
-  console.log("3", new Date().getMilliseconds());
   inputAddress.value = `${setPointTokyo[0]}, ${setPointTokyo[1]}`;
 });

@@ -3,9 +3,8 @@ import {
   getRandomArrayElement,
   getRandomArraySubset,
 } from "./utils/utils.js";
-import { renderCards } from "./renderCards.js";
 import { initFormHandlers } from "./formHandlers.js";
-import "./map.js";
+import { addMarkersToMap } from "./map.js";
 
 const types = ["palace", "flat", "house", "bungalow"];
 const checking = ["12:00", "13:00", "14:00"];
@@ -66,7 +65,8 @@ function createOffer() {
   };
 }
 
-createAnnouncementObject();
+const announcements = createAnnouncementObject();
 
-// renderCards(announcements, "#card", "main");
 initFormHandlers(".ad-form");
+
+addMarkersToMap(announcements);

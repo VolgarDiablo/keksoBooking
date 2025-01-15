@@ -1,68 +1,52 @@
-export function renderCards(data, templateId, containerSelector) {
-  const template = document.querySelector(templateId);
-  const container = document.querySelector(containerSelector);
-
-  if (!template || !container) {
-    console.error("Template or container not found.");
-    return;
+export function renderCard(data) {
+  const template = document.querySelector("#card");
+  if (!template) {
+    console.error("Шаблон #card не найден");
+    return null;
   }
 
-  data.forEach((item) => {
-    const cardElement = createCardElement(item, template);
-    container.appendChild(cardElement);
-  });
-}
+  const clonedTemplate = template.content.cloneNode(true);
 
-function createCardElement(item, template) {
-  const cardElement = template.content.cloneNode(true);
-
-  cardElement.querySelector(".popup__avatar").src = item.author.avatar;
-  cardElement.querySelector(".popup__title").textContent = item.offer.title;
-  cardElement.querySelector(".popup__text--address").textContent =
-    item.offer.address;
-  cardElement.querySelector(
-    ".popup__text--price"
-  ).innerHTML = `${item.offer.price} $/ночь`;
-  cardElement.querySelector(".popup__type").textContent = item.offer.type;
-  cardElement.querySelector(
-    ".popup__text--capacity"
-  ).textContent = `${item.offer.rooms} комнаты для ${item.offer.guests} гостей`;
-  cardElement.querySelector(
+  clonedTemplate.querySelector(".popup__avatar").src = data.author.avatar || "";
+  clonedTemplate.querySelector(".popup__title").textContent =
+    data.offer.title || "Нет данных";
+  clonedTemplate.querySelector(".popup__text--address").textContent =
+    data.offer.address || "Нет данных";
+  clonedTemplate.querySelector(".popup__text--price").textContent = `${
+    data.offer.price || 0
+  } ₽/ночь`;
+  clonedTemplate.querySelector(".popup__type").textContent =
+    data.offer.type || "Нет данных";
+  clonedTemplate.querySelector(".popup__text--capacity").textContent = `${
+    data.offer.rooms || 0
+  } комнаты для ${data.offer.guests || 0} гостей`;
+  clonedTemplate.querySelector(
     ".popup__text--time"
-  ).textContent = `Заезд после ${item.offer.checking}, выезд до ${item.offer.checkout}`;
-  cardElement.querySelector(".popup__description").textContent =
-    item.offer.description;
+  ).textContent = `Заезд после ${
+    data.offer.checking || "Нет данных"
+  }, выезд до ${data.offer.checkout || "Нет данных"}`;
+  clonedTemplate.querySelector(".popup__description").textContent =
+    data.offer.description || "Нет данных";
 
-  populateFeatures(
-    cardElement.querySelector(".popup__features"),
-    item.offer.features
-  );
-  populatePhotos(
-    cardElement.querySelector(".popup__photos"),
-    item.offer.photos
-  );
-
-  return cardElement;
-}
-
-function populateFeatures(featuresContainer, features) {
+  const featuresContainer = clonedTemplate.querySelector(".popup__features");
   featuresContainer.innerHTML = "";
-  features.forEach((feature) => {
+  (data.offer.features || []).forEach((feature) => {
     const li = document.createElement("li");
-    li.className = `popup__feature popup__feature--${feature}`;
+    li.classList.add("popup__feature", `popup__feature--${feature}`);
     featuresContainer.appendChild(li);
   });
-}
 
-function populatePhotos(photosContainer, photos) {
+  const photosContainer = clonedTemplate.querySelector(".popup__photos");
   photosContainer.innerHTML = "";
-  photos.forEach((photo) => {
+  (data.offer.photos || []).forEach((photo) => {
     const img = document.createElement("img");
+    img.classList.add("popup__photo");
     img.src = photo;
-    img.className = "popup__photo";
     img.width = 45;
     img.height = 40;
     img.alt = "Фотография жилья";
     photosContainer.appendChild(img);
   });
+
+  return clonedTemplate;
 }
