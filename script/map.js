@@ -1,4 +1,5 @@
 import { renderCard } from "./renderCards.js";
+import { fetchAnnouncements } from "./api.js";
 
 const mapFilters = document.getElementById("map__filters");
 const adFilters = document.getElementById("ad-form");
@@ -35,7 +36,6 @@ export function stateElementsForm(form, state) {
   });
 }
 
-// Инициализация
 const map = L.map("map-canvas").setView(setPointTokyo, 13);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -44,7 +44,6 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
 
-// Главная метка
 const mainMarker = L.marker(setPointTokyo, {
   icon: mainPinIcon,
   draggable: true,
@@ -55,8 +54,7 @@ mainMarker.on("move", (event) => {
   inputAddress.value = `${lat}, ${lng}`;
 });
 
-// Добавление меток с карточками на карту
-export function addMarkersToMap(announcements) {
+function addMarkersToMap(announcements) {
   announcements.forEach((announcement) => {
     const marker = L.marker(
       [announcement.offer.location.x, announcement.offer.location.y],
@@ -83,8 +81,21 @@ export function addMarkersToMap(announcements) {
   });
 }
 
+async function loadAnnouncements() {
+  try {
+    const announcements = await fetchAnnouncements();
+    addMarkersToMap(announcements);
+  } catch (error) {
+    console.error("Не удалось загрузить данные:", error);
+    alert("Ошибка загрузки данных. Попробуйте обновить страницу.");
+  } finally {
+    setPageActive();
+  }
+}
+
 map.whenReady(() => {
   console.log("Карта загрузилась");
   setPageActive();
   inputAddress.value = `${setPointTokyo[0]}, ${setPointTokyo[1]}`;
+  loadAnnouncements();
 });

@@ -1,3 +1,5 @@
+import { sendFormData } from "./api.js";
+
 export function initFormHandlers(formSelector) {
   const form = document.querySelector(formSelector);
   const typeField = form.querySelector("#type");
@@ -12,6 +14,46 @@ export function initFormHandlers(formSelector) {
   setupRoomCapacitySync(roomField, capacityField);
 
   initializeFields(typeField, checkInField, roomField);
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    const transformedData = {
+      author: {
+        avatar: "img/avatars/default.png",
+      },
+      offer: {
+        title: formData.get("title"),
+        address: formData.get("address"),
+        price: parseInt(formData.get("price"), 10),
+        type: formData.get("type"),
+        rooms: parseInt(formData.get("rooms"), 10),
+        guests: parseInt(formData.get("capacity"), 10),
+        checking: formData.get("timein"),
+        checkout: formData.get("timeout"),
+        features: formData.getAll("features"),
+        description: formData.get("description"),
+        photos: [],
+        location: {
+          x: parseFloat(formData.get("address").split(",")[0]),
+          y: parseFloat(formData.get("address").split(",")[1]),
+        },
+      },
+    };
+
+    try {
+      const result = await sendFormData(
+        "http://localhost:8080/offer",
+        JSON.stringify(transformedData)
+      );
+      console.log("Данные успешно отправлены:", result);
+      form.reset();
+    } catch (error) {
+      console.error("Не удалось отправить данные:", error);
+    }
+  });
 }
 
 function setupTypePriceSync(typeField, priceField) {
@@ -71,8 +113,6 @@ function setupRoomCapacitySync(roomField, capacityField) {
 
 function initializeFields(typeField, checkInField, roomField) {
   typeField.dispatchEvent(new Event("change"));
-
   checkInField.dispatchEvent(new Event("change"));
-
   roomField.dispatchEvent(new Event("change"));
 }
