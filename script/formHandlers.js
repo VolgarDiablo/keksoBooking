@@ -45,7 +45,7 @@ export function initFormHandlers(formSelector) {
 
     try {
       const result = await sendFormData(
-        "http://localhost:8080/offer",
+        "http://localhost:8080/offers",
         JSON.stringify(transformedData)
       );
       console.log("Данные успешно отправлены:", result);
