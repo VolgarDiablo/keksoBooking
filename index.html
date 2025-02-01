@@ -172,6 +172,7 @@
                   id="avatar"
                   name="avatar"
                   class="ad-form-header__input visually-hidden"
+                  required
                 />
                 <label class="ad-form-header__drop-zone" for="avatar"
                   >Загрузить<br />фото...</label
@@ -195,13 +196,14 @@
               name="title"
               type="text"
               placeholder="Милая, уютная квартирка в центре Токио"
+              required
             />
           </fieldset>
           <fieldset class="ad-form__element ad-form__element--wide">
             <label class="ad-form__label" for="address"
               >Адрес (координаты)</label
             >
-            <input id="address" name="address" type="text" />
+            <input id="address" name="address" type="text" readonly />
           </fieldset>
           <fieldset class="ad-form__element">
             <label class="ad-form__label" for="type">Тип жилья</label>
@@ -337,6 +339,7 @@
                   id="images"
                   name="images"
                   class="ad-form__input visually-hidden"
+                  required
                 />
                 <label for="images" class="ad-form__drop-zone"
                   >Загрузить<br />фото...</label

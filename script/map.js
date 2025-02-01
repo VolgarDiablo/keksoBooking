@@ -36,7 +36,7 @@ export function stateElementsForm(form, state) {
   });
 }
 
-const map = L.map("map-canvas").setView(setPointTokyo, 13);
+const map = L.map("map-canvas").setView(setPointTokyo, 15);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
@@ -54,37 +54,40 @@ mainMarker.on("move", (event) => {
   inputAddress.value = `${lat}, ${lng}`;
 });
 
+let markersLayer = L.layerGroup().addTo(map);
+let allAnnouncements = [];
+
 function addMarkersToMap(announcements) {
-  announcements.forEach((announcement) => {
+  markersLayer.clearLayers();
+
+  announcements.slice(0, 10).forEach((announcement) => {
     const marker = L.marker(
       [announcement.offer.location.x, announcement.offer.location.y],
-      {
-        icon: pinIcon,
-      }
-    ).addTo(map);
+      { icon: pinIcon }
+    );
 
-    marker.on("click", () => {
-      const popupContent = renderCard(announcement);
-      if (!popupContent) return;
+    marker.bindPopup(renderCard(announcement));
 
-      const container = document.createElement("div");
-      container.appendChild(popupContent);
-
-      const popup = L.popup()
-        .setLatLng([
-          announcement.offer.location.x,
-          announcement.offer.location.y,
-        ])
-        .setContent(container)
-        .openOn(map);
-    });
+    markersLayer.addLayer(marker);
   });
+}
+
+// Фильтрация меток
+function filterVisibleMarkers() {
+  const bounds = map.getBounds();
+
+  const visibleAnnouncements = allAnnouncements.filter((announcement) => {
+    const { x, y } = announcement.offer.location;
+    return bounds.contains([x, y]);
+  });
+
+  addMarkersToMap(visibleAnnouncements);
 }
 
 async function loadAnnouncements() {
   try {
-    const announcements = await fetchAnnouncements();
-    addMarkersToMap(announcements);
+    allAnnouncements = await fetchAnnouncements();
+    filterVisibleMarkers();
   } catch (error) {
     console.error("Не удалось загрузить данные:", error);
     alert("Ошибка загрузки данных. Попробуйте обновить страницу.");
@@ -99,3 +102,5 @@ map.whenReady(() => {
   inputAddress.value = `${setPointTokyo[0]}, ${setPointTokyo[1]}`;
   loadAnnouncements();
 });
+
+map.on("moveend", filterVisibleMarkers);
