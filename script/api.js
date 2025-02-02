@@ -19,8 +19,8 @@ export async function fetchAnnouncements() {
   }
 }
 
-export async function sendFormData(url, data) {
-  const response = await fetch(url, {
+export async function sendFormData(data) {
+  const response = await fetch(`${BASE_URL}/offers`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
