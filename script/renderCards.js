@@ -39,5 +39,5 @@ export function renderCard(data) {
     photosContainer.appendChild(img);
   });
 
-  return clonedTemplate;
+  return clonedTemplate.firstElementChild.outerHTML;
 }
