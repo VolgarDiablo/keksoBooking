@@ -58,7 +58,7 @@ let markersLayer = L.layerGroup().addTo(map);
 let allAnnouncements = [];
 
 function addMarkersToMap(announcements) {
-  // markersLayer.clearLayers();
+  markersLayer.clearLayers();
 
   announcements.slice(0, 10).forEach((announcement) => {
     const marker = L.marker(
@@ -106,9 +106,3 @@ map.whenReady(() => {
   inputAddress.value = `${setPointTokyo[0]}, ${setPointTokyo[1]}`;
   loadAnnouncements();
 });
-
-// map.on("move", () => {
-//   map.closePopup();
-// });
-
-map.on("moveend", filterVisibleMarkers);
