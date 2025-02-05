@@ -60,39 +60,21 @@ let allAnnouncements = [];
 function addMarkersToMap(announcements) {
   markersLayer.clearLayers();
 
-  announcements.slice(0, 10).forEach((announcement) => {
+  announcements.forEach((announcement) => {
     const marker = L.marker(
       [announcement.offer.location.x, announcement.offer.location.y],
       { icon: pinIcon }
     );
 
     markersLayer.addLayer(marker);
-
     marker.bindPopup(renderCard(announcement));
-
-    marker.on("popupopen", (e) => {
-      console.log("Попап открылся:", e);
-      console.log("Контент попапа:", e.popup.getContent());
-    });
   });
-}
-
-// Фильтрация меток
-function filterVisibleMarkers() {
-  const bounds = map.getBounds();
-
-  const visibleAnnouncements = allAnnouncements.filter((announcement) => {
-    const { x, y } = announcement.offer.location;
-    return bounds.contains([x, y]);
-  });
-
-  addMarkersToMap(visibleAnnouncements);
 }
 
 async function loadAnnouncements() {
   try {
     allAnnouncements = await fetchAnnouncements();
-    filterVisibleMarkers();
+    addMarkersToMap(allAnnouncements);
   } catch (error) {
     console.error("Не удалось загрузить данные:", error);
     alert("Ошибка загрузки данных. Попробуйте обновить страницу.");
@@ -105,4 +87,20 @@ map.whenReady(() => {
   setPageActive();
   inputAddress.value = `${setPointTokyo[0]}, ${setPointTokyo[1]}`;
   loadAnnouncements();
+});
+
+let isPopupOpened = false;
+
+map.on("popupopen", () => {
+  isPopupOpened = true;
+});
+
+map.on("popupclose", () => {
+  isPopupOpened = false;
+});
+
+map.on("movestart", () => {
+  if (isPopupOpened && map.dragging.enabled()) {
+    map.closePopup();
+  }
 });
