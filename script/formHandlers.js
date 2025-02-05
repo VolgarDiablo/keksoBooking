@@ -1,28 +1,37 @@
 import { sendFormData } from "./api.js";
 
+const typeField = document.querySelector("#type");
+const priceField = document.querySelector("#price");
+const checkInField = document.querySelector("#timein");
+const checkOutField = document.querySelector("#timeout");
+const roomField = document.querySelector("#room_number");
+const capacityField = document.querySelector("#capacity");
+
+const typeToMinPrice = {
+  bungalow: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000,
+};
+const roomToCapacity = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0],
+};
+
 export function initFormHandlers(formSelector) {
   const form = document.querySelector(formSelector);
-  const typeField = form.querySelector("#type");
-  const priceField = form.querySelector("#price");
-  const checkInField = form.querySelector("#timein");
-  const checkOutField = form.querySelector("#timeout");
-  const roomField = form.querySelector("#room_number");
-  const capacityField = form.querySelector("#capacity");
-
-  setupTypePriceSync(typeField, priceField);
-  setupTimeSync(checkInField, checkOutField);
-  setupRoomCapacitySync(roomField, capacityField);
-
-  initializeFields(typeField, checkInField, roomField);
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const images = document.querySelectorAll(".ad-form__photo img");
 
     const formData = new FormData(form);
 
     const transformedData = {
       author: {
-        avatar: "img/avatars/default.png",
+        avatar: document.querySelector(".ad-form-header__preview img").src,
       },
       offer: {
         title: formData.get("title"),
@@ -35,60 +44,45 @@ export function initFormHandlers(formSelector) {
         checkout: formData.get("timeout"),
         features: formData.getAll("features"),
         description: formData.get("description"),
-        photos: [],
+        photos: [Array.from(images).map((img) => img.src)],
         location: {
           x: parseFloat(formData.get("address").split(",")[0]),
           y: parseFloat(formData.get("address").split(",")[1]),
         },
       },
     };
+    console.log(transformedData);
 
-    try {
-      const result = await sendFormData(JSON.stringify(transformedData));
-      console.log("Данные успешно отправлены:", result);
-      form.reset();
-    } catch (error) {
-      console.error("Не удалось отправить данные:", error);
-    }
+    // try {
+    //   const result = await sendFormData(JSON.stringify(transformedData));
+    //   console.log("Данные успешно отправлены:", result);
+    //   form.reset();
+    // } catch (error) {
+    //   console.error("Не удалось отправить данные:", error);
+    // }
   });
 }
 
-function setupTypePriceSync(typeField, priceField) {
-  const typeToMinPrice = {
-    bungalow: 0,
-    flat: 1000,
-    house: 5000,
-    palace: 10000,
-  };
+typeField.addEventListener("change", () => {
+  const selectedType = typeField.value;
+  const minPrice = typeToMinPrice[selectedType];
 
-  typeField.addEventListener("change", () => {
-    const selectedType = typeField.value;
-    const minPrice = typeToMinPrice[selectedType];
+  priceField.min = minPrice;
+  priceField.placeholder = minPrice.toString();
+  priceField.value = minPrice;
+});
 
-    priceField.min = minPrice;
-    priceField.placeholder = minPrice.toString();
-  });
+function syncTime(event) {
+  const selectedValue = event.target.value;
+  checkInField.value = selectedValue;
+  checkOutField.value = selectedValue;
 }
 
-function setupTimeSync(checkInField, checkOutField) {
-  checkInField.addEventListener("change", () => {
-    checkOutField.value = checkInField.value;
-  });
+checkInField.addEventListener("change", syncTime);
+checkOutField.addEventListener("change", syncTime);
 
-  checkOutField.addEventListener("change", () => {
-    checkInField.value = checkOutField.value;
-  });
-}
-
-function setupRoomCapacitySync(roomField, capacityField) {
-  const roomToCapacity = {
-    1: [1],
-    2: [1, 2],
-    3: [1, 2, 3],
-    100: [0],
-  };
-
-  roomField.addEventListener("change", () => {
+document.addEventListener("DOMContentLoaded", function () {
+  function updateCapacityOptions() {
     const selectedRoom = roomField.value;
     const allowedCapacities = roomToCapacity[selectedRoom];
 
@@ -105,11 +99,13 @@ function setupRoomCapacitySync(roomField, capacityField) {
     if (!allowedCapacities.includes(Number(capacityField.value))) {
       capacityField.value = allowedCapacities[0];
     }
-  });
-}
+  }
 
-function initializeFields(typeField, checkInField, roomField) {
-  typeField.dispatchEvent(new Event("change"));
-  checkInField.dispatchEvent(new Event("change"));
-  roomField.dispatchEvent(new Event("change"));
-}
+  updateCapacityOptions();
+
+  roomField.addEventListener("change", updateCapacityOptions);
+});
+
+priceField.addEventListener("input", (e) => {
+  priceField.value = e.target.value;
+});
