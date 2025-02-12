@@ -104,3 +104,59 @@ map.on("movestart", () => {
     map.closePopup();
   }
 });
+
+function applyFilters() {
+  const type = document.getElementById("housing-type").value;
+  const price = document.getElementById("housing-price").value;
+  const rooms = document.getElementById("housing-rooms").value;
+  const guests = document.getElementById("housing-guests").value;
+
+  const selectedFeatures = Array.from(
+    document.querySelectorAll("#housing-features input:checked")
+  ).map((input) => input.value);
+
+  const filteredAnnouncements = allAnnouncements.filter((announcement) => {
+    const offer = announcement.offer;
+
+    if (type !== "any" && offer.type !== type) {
+      return false;
+    }
+
+    if (price !== "any") {
+      if (price === "middle" && !(offer.price >= 1000 && offer.price <= 5000)) {
+        return false;
+      }
+      if (price === "low" && offer.price > 1000) {
+        return false;
+      }
+      if (price === "high" && offer.price < 10000) {
+        return false;
+      }
+    }
+
+    if (rooms !== "any" && offer.rooms !== Number(rooms)) {
+      return false;
+    }
+
+    if (guests !== "any" && offer.guests !== Number(guests)) {
+      return false;
+    }
+
+    if (selectedFeatures.length > 0) {
+      const hasAllFeatures = selectedFeatures.every((feature) =>
+        offer.features.includes(feature)
+      );
+      if (!hasAllFeatures) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  addMarkersToMap(filteredAnnouncements);
+}
+
+mapFilters.addEventListener("change", () => {
+  applyFilters();
+});

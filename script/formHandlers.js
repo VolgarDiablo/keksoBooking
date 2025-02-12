@@ -53,13 +53,13 @@ export function initFormHandlers(formSelector) {
     };
     console.log(transformedData);
 
-    // try {
-    //   const result = await sendFormData(JSON.stringify(transformedData));
-    //   console.log("Данные успешно отправлены:", result);
-    //   form.reset();
-    // } catch (error) {
-    //   console.error("Не удалось отправить данные:", error);
-    // }
+    try {
+      const result = await sendFormData(JSON.stringify(transformedData));
+      console.log("Данные успешно отправлены:", result);
+      form.reset();
+    } catch (error) {
+      console.error("Не удалось отправить данные:", error);
+    }
   });
 }
 
